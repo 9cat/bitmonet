@@ -1,0 +1,170 @@
+.settings-area {
+  margin: 25px 0 0 25px;
+  width: 570px;
+}
+
+.settings-area h2 {
+  font: bold 23px Arial;
+  color: #000;
+}
+
+.settings-area h2 span {
+  font: normal 15px Arial;
+  color: #5d6167;
+  display: block;
+}
+
+.settings-area h3 {
+  font: bold 18px Arial;
+  color: #5d6167;
+  border-bottom: #edeef2 6px solid;
+  line-height: 180%;
+  margin-top: 40px;
+}
+
+.form-table th {
+  vertical-align: middle;
+  padding-right: 20px;
+  width: auto;
+  padding-left: 35px;
+  width: 130px;
+}
+
+.form-table th, .form-table td {
+  font: normal 15px Arial;
+  color: #5d6167;
+}
+
+.form-table input[type=text], .form-table input[type=number] {
+  font: bold 13px Arial;
+  line-height: 16px;
+  height: 28px;
+  color: #5d6167;
+  padding-left: 8px;
+  padding-right: 8px;
+  border-color: #d6dce2;
+  border-width: 1px;
+}
+
+.form-table input[type=text]:hover, .form-table input[type=number]:hover {
+  border-color: #babec3;
+}
+
+.form-table input[type=text]:focus, .form-table input[type=number]:focus {
+  border-color: #9099a3;
+}
+
+.form-table input.button {
+  margin-left: 1px;
+}
+
+input.website {
+  width: 230px;
+}
+
+input.apikey {
+  width: 360px;
+}
+
+input.pass {
+  width: 69px;
+  text-align: right;
+}
+
+.form-table th span {
+  font: normal 13px Arial;
+  color: #c2c6cb;
+  display: block;
+  margin-top: 10px;
+}
+
+.form-table th span a {
+  color: #9099a3;
+}
+
+.form-table th span a:hover {
+  text-decoration: none;
+}
+
+label[for=article_pass], label[for=hour_pass], label[for=day_pass] {
+  padding-left: 34px;
+  padding-bottom: 15px;
+  padding-top: 2px;
+  background-repeat: no-repeat;
+  background-position: 5px 0;
+}
+
+label[for=article_pass] {
+  background-image: url('images/article_pass.png');
+}
+
+label[for=hour_pass] {
+  background-image: url('images/hour_pass.png');
+}
+
+label[for=day_pass] {
+  background-image: url('images/day_pass.png');
+  background-position: 0px 0;
+  padding-top: 5px;
+}
+
+.sign {
+  font: bold 13px Arial;
+  position: absolute;
+  margin: 7px 10px;
+}
+
+.float-left {
+  float: left;
+}
+
+.wp-picker-holder, .wp-picker-input-wrap {
+  position: absolute;
+}
+
+.wp-color-result {
+  margin-top: 5px;
+  top: 0px;
+}
+
+.form-table input.color-picker {
+  width: 85px;
+  padding-left: 27px;
+}
+
+
+p.submit {
+  margin-top: 40px;
+}
+
+input[name=save_settings] {
+  float: left;
+}
+
+.spinner {
+  float:left;
+}
+
+.pass-table th {
+  padding-left: 35px;
+}
+
+.two-panel {
+  margin-top: 5px;
+}
+
+input.error, input.error:focus {
+  border-color: #ff0000;
+}
+
+.save_message {
+  font-weight: bold;
+  font-size: 12px;
+  margin-left: 10px;
+  line-height: 25px;
+  display: none;
+}
+
+.show_preview {
+  margin-left: 10px;
+}
