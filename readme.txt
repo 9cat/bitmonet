@@ -15,7 +15,7 @@ Open-source microtransactions platform to monetize digital content with nearly z
 BitMonet is a smart microtransactions platform that enables digital content monetization with virtually zero transaction fees.
 
 = Features include =
-1. Monetize per post of content, or offer time-metered subscription services (per hour or per day)
+1. Monetize per post, or offer time-metered subscription services (per hour or per day)
 2. Zero BitMonet transaction fees
 3. No account required for the user
 4. Set-up in less than 15 seconds
