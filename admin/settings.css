@@ -153,7 +153,7 @@ input[name=save_settings] {
   margin-top: 5px;
 }
 
-input.error, input.error:focus {
+.form-table input.error, .form-table input.error:focus {
   border-color: #ff0000;
 }
 
