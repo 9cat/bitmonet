@@ -64,6 +64,7 @@ BitMonet open source project can be found here [here](http://github.com/bitmonet
 4. Go to 'Settings -> BitMonet' and start monetizing your valuable content
 
 
+
 == Changelog ==
 
 = 0.2 =
