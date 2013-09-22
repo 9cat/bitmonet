@@ -40,9 +40,9 @@ jQuery(function($)
           {
             var current_val = $hidden.val();
 
-            $checkbox.attr('checked', $hidden.val() == 1?false:true).on('click', function()
+            $checkbox.attr('checked', $hidden.val() == 1?true:false).on('click', function()
             {
-              current_val = $checkbox.prop('checked')?0:1;
+              current_val = $checkbox.prop('checked')?1:0;
               $hidden.val(current_val);
             });
 
@@ -81,9 +81,9 @@ jQuery(function($)
       $checkbox = $('input[type=checkbox]', $label),
       $monetize_hidden = $('input[name=bitmonet_monetize]');
 
-    $checkbox.attr('checked', $monetize_hidden.val() == 1?false:true).on('change', function()
+    $checkbox.attr('checked', $monetize_hidden.val() == 1?true:false).on('change', function()
     {
-      $monetize_hidden.val($checkbox.prop('checked')?0:1);
+      $monetize_hidden.val($checkbox.prop('checked')?1:0);
     });
 
     $('<div class="misc-pub-section"></div>').append($label.css('margin-left', '0')

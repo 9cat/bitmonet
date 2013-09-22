@@ -4,7 +4,7 @@ Donate link: http://bitmonet.com/
 Tags: BitMonet, Bitcoins, BitPay, BTC, Micropayments, Microtransactions, Virtual Currency, Payment, Monetization, Publishers, Content Publishers, Content Monetization, Digital Content Monetization,  Zero Transaction Fees, Free Transactions, Open-Source, Bitcoin Monetization, Off-the Blockchain Transactions, Page, Posts, Plugin, Post
 Requires at least: 3.5
 Tested up to: 3.6.1
-Stable tag: 0.1
+Stable tag: 0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,7 +17,7 @@ BitMonet is a smart microtransactions platform that enables digital content mone
 = Features include =
 1. Monetize per post, or offer time-metered subscription services (per hour or per day)
 2. Zero BitMonet transaction fees
-3. No account required for the user
+3. No account creation required for the user
 4. Set-up in less than 15 seconds
 5. Completely configurable: Customize the branding, color of the modal, number of free pieces of content
 6. Enable or disable monetization per post
@@ -27,8 +27,13 @@ BitMonet is a smart microtransactions platform that enables digital content mone
  * [TechCrunch](http://techcrunch.com/2013/08/30/bitmonet-monetizes-your-blog-through-the-power-of-bitcoin/)
  * [PC World](http://www.pcworld.com/article/2047980/news-junkies-opensource-project-links-bitcoin-with-publishers.html)
  * [IEEE Spectrum](http://spectrum.ieee.org/tech-talk/telecom/internet/payasyouread-with-bitmonet)
+ * [The Next Web](http://thenextweb.com/media/2013/09/19/any-publisher-can-make-money-using-bitmonets-bitcoin-powered-micro-paywall/)
  * [Coindesk](http://www.coindesk.com/bitmonet-unveils-free-bitcoin-paywall-function-for-publishers/)
+ * [Bitcoin Magazine](http://bitcoinmagazine.com/6574/bitmonet-bitpays-newest-merchant/)
 
+For more information please visit [Bitmonet.con](http://www.bitmonet.com)
+
+BitMonet open source project can be found here [here](http://github.com/bitmonet)
 
 
 == Screenshots ==
@@ -60,6 +65,10 @@ BitMonet is a smart microtransactions platform that enables digital content mone
 
 
 == Changelog ==
+
+= 0.2 =
+ - Bug Fixes
+ - Disabling BitMonet by default for all posts
 
 = 0.1 =
  - Initial version

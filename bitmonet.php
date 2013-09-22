@@ -3,7 +3,7 @@
 Plugin Name: BitMonet
 Plugin URI: http://wordpress.org/plugins/bitmonet/
 Description: Microtransactions platform to monetize digital content with nearly zero transaction fees!
-Version: 0.1
+Version: 0.2
 Author: bitmonet.com
 Author URI: http://bitmonet.com
 License: GPLv2 or later
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) die();
 class BitMonet
 {
   // version of the plugin should be updated with header version
-  const version = '0.1';
+  const version = '0.2';
 
   // language domain, used for translation
   const ld = 'bitmonet';
@@ -219,7 +219,6 @@ class BitMonet
 
     if (isset($_POST['monetize']) && isset($_POST['post_id']) && $_POST['post_id'])
     {
-      print_r($_POST);
       update_post_meta($_POST['post_id'], '_bitmonet', $_POST['monetize']);
       echo json_encode(array('status' => 1));
     }
@@ -232,7 +231,7 @@ class BitMonet
   {
     // create invoice method
     if (isset($_GET['method']) && $_GET['method'] == 'createInvoice' && isset($_GET['price']) &&
-      isset($_GET['currency']) && isset($_GET['callback']))
+      isset($_GET['currency']) && isset($_GET['callback']) && isset($_GET['redirectURL']))
     {
       $r = wp_remote_post('https://'.$this->getSetting('api_key').'@bitpay.com/api/invoice', array(
         'method' => 'POST',
@@ -246,7 +245,8 @@ class BitMonet
         'body' => json_encode(array(
           'price' => $_GET['price'],
           'currency' => $_GET['currency'],
-          'transactionSpeed' => 'high'
+          'transactionSpeed' => 'high',
+          'redirectURL' => $_GET['redirectURL']
         )),
         'cookies' => array(),
         'sslverify' => false
@@ -315,13 +315,13 @@ class BitMonet
     if (isset($_GET['bulk_edit']) && isset($_GET['post']) && is_array($_GET['post']))
     {
       foreach($_GET['post'] as $id)
-        update_post_meta($id, '_bitmonet', isset($_GET['bitmonet-monetize'])?0:1);
+        update_post_meta($id, '_bitmonet', isset($_GET['bitmonet-monetize'])?1:0);
     }
 
     if (!(in_array($_POST['post_type'], array('post', 'page')) && current_user_can('edit_post', $post_id)))
       return;
 
-    // basically 0 - Enabled (because it's default) and 1 - Disabled
+    // 1 enabled, 0 disabled
     if (isset($_POST['bitmonet_monetize']))
       update_post_meta($post_id, '_bitmonet', $_POST['bitmonet_monetize']);
   }
@@ -330,14 +330,18 @@ class BitMonet
   // add scripts to the frontend
   public function wp_enqueue_scripts()
   {
+    global $post;
+
+    // only if bitmonet is enabled for this post
+    if (is_home() || !get_post_meta($post->ID, '_bitmonet', true))
+      return;
+
     $article_pass = $this->getSetting('article_pass');
     $hour_pass = $this->getSetting('hour_pass');
     $day_pass = $this->getSetting('day_pass');
 
     // add bitmonet main script
-    wp_enqueue_script(__class__.'_bitmonet', '//cdn.jsdelivr.net/bitmonet/0.1/bitmonet.min.js', array('jquery'), self::version, false);
-
-    if (!is_home()) return;
+    wp_enqueue_script(__class__.'_bitmonet', $this->_url.'/bitmonet/bitmonet.min.js', array('jquery'), self::version, false);
 
     $site_url = trailingslashit(get_site_url());
 
@@ -381,15 +385,6 @@ class BitMonet
   // add meta tag to the header
   public function wp_head()
   {
-    if (!is_home())
-    {
-      global $post;
-
-      // only if bitmonet is not disabled for this post
-      if (!get_post_meta($post->ID, '_bitmonet', true))
-        echo '<meta name="bitmonet-article" content="bitmonet-article" bitmonet-articleId="article'.$post->ID.'" />'.PHP_EOL;
-    }
-
     // custom styles for bitmonet dialog
     $button_color = $this->getSetting('button_color');
     $button_text_color = $this->getSetting('button_text_color');
