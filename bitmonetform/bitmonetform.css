@@ -1,0 +1,155 @@
+.bmf-form h3 {
+  font: bold 18px Arial;
+  color: #5d6167;
+  border-bottom: #edeef2 6px solid;
+  line-height: 180%;
+  margin-top: 40px;
+}
+
+.bmf-form-table {
+  border-collapse: collapse;
+  margin-top: .5em;
+  width: 100%;
+  margin-bottom: -8px;
+  clear: both;
+}
+
+.bmf-form-table td {
+  margin-bottom: 9px;
+  padding: 8px 10px;
+  line-height: 20px;
+}
+
+.bmf-form-table th, .bmf-form-table td {
+  padding: 10px;
+  font: normal 15px Arial;
+  color: #5d6167;
+  text-align: left;
+}
+
+.bmf-form-table th {
+  vertical-align: middle;
+  padding-right: 20px;
+  width: auto;
+  padding-left: 35px;
+  width: 130px;
+}
+
+.bmf-form-table input[type=text], .bmf-form-table input[type=number] {
+  font: bold 13px Arial;
+  line-height: 16px;
+  height: 28px;
+  color: #5d6167;
+  padding: 3px 8px;
+  border: #d6dce2 1px solid;
+  background-color: #fff;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  outline: 0;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.bmf-form-table input[type=text]:hover, .bmf-form-table input[type=number]:hover {
+  border-color: #babec3;
+}
+
+.bmf-form-table input[type=text]:focus, .bmf-form-table input[type=number]:focus {
+  -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+  border-color: #9099a3;
+}
+
+.bmf-form-table input.bmf-button {
+  margin-left: 1px;
+}
+
+input.bmf-website {
+  width: 230px;
+}
+
+input.bmf-api-key {
+  width: 360px;
+}
+
+input.bmf-pass {
+  width: 69px;
+  text-align: right;
+}
+
+.bmf-form-table th span, span.bmf-helptext {
+  font: normal 13px Arial;
+  color: #c2c6cb;
+  display: block;
+  margin-top: 10px;
+}
+
+.bmf-form-table th span a, span.bmf-helptext a {
+  color: #9099a3;
+}
+
+.bmf-form-table th span a:hover, span.bmf-helptext a:hover {
+  text-decoration: none;
+}
+
+span.bmf-helptext {
+  margin-top: 5px;
+  padding-left: 16px;
+}
+
+label[for=bmf_article_pass], label[for=bmf_hour_pass], label[for=bmf_day_pass] {
+  padding-left: 34px;
+  padding-bottom: 15px;
+  padding-top: 2px;
+  background-repeat: no-repeat;
+  background-position: 5px 0;
+}
+
+label[for=bmf_article_pass] {
+  background-image: url('images/article_pass.png');
+}
+
+label[for=bmf_hour_pass] {
+  background-image: url('images/hour_pass.png');
+}
+
+label[for=bmf_day_pass] {
+  background-image: url('images/day_pass.png');
+  background-position: 0px 0;
+  padding-top: 5px;
+}
+
+.bmf-sign {
+  font: bold 13px Arial;
+  position: absolute;
+  margin: 7px 10px;
+}
+
+.bmf-float-left {
+  float: left;
+}
+
+.bmf-form-table input.bmf-color-picker {
+  width: 85px;
+  padding-left: 27px;
+}
+
+.bmf-pass-table th {
+  padding-left: 35px;
+}
+
+.bmf-two-panel {
+  margin-top: 5px;
+}
+
+.bmf-form-table input.bmf-error,
+.bmf-form-table input.bmf-error:focus,
+.bmf-form-table input.bmf-error:hover {
+  border-color: #ff0000;
+}
+
+.bmf-form-table td.bmf-checkbox {
+  padding-left: 35px;
+}

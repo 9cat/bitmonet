@@ -1,0 +1,34 @@
+<html>
+  <head>
+    <link rel='stylesheet' href='bitmonetform.css' type='text/css' media='all' />
+    <link rel='stylesheet' href='3rdparty/jquery-minicolors/jquery.minicolors.css' type='text/css' media='all' />
+    <script type='text/javascript' src='jquery-2.0.3.min.js'></script>
+    <script type='text/javascript' src='3rdparty/jquery-minicolors/jquery.minicolors.min.js'></script>
+    <script type='text/javascript' src='bitmonetform.js'></script>
+    <title>BitMonetForm Testing Page</title>
+  </head>
+  <body>
+    <div id="bitmonet_form"></div>
+
+    <button id="get_script" name="get_script" value="1">Get Script</button>
+
+    <pre id="bm_script">
+    </pre>
+
+    <script>
+    jQuery(function($)
+    {
+      var $form = $('#bitmonet_form');
+
+      $form.BitMonetForm({
+
+      });
+
+      $('#get_script').on('click', function()
+      {
+        $('#bm_script').text($form.BitMonetForm('getCode'));
+      });
+    });
+    </script>
+  </body>
+</html>
