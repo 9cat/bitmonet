@@ -3,7 +3,7 @@
 Plugin Name: BitMonet
 Plugin URI: http://wordpress.org/plugins/bitmonet/
 Description: Microtransactions platform to monetize digital content with nearly zero transaction fees!
-Version: 0.2
+Version: 0.3
 Author: bitmonet.com
 Author URI: http://bitmonet.com
 License: GPLv2 or later
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) die();
 class BitMonet
 {
   // version of the plugin should be updated with header version
-  const version = '0.2';
+  const version = '0.3';
 
   // language domain, used for translation
   const ld = 'bitmonet';
@@ -34,15 +34,18 @@ class BitMonet
     // default settings definition, will be used as initial settings
     $this->default_settings = array(
       'homepage_url' => get_site_url(),
-      'api_key' => '',
+      'bitpay_apikey' => '',
+      'paypal_email' => '',
       'company_name' => '',
       'company_logo' => '',
-      'number_clicked_need_buy' => '0',
+      'free_content_count' => '0',
       'article_pass' => 0.1,
       'hour_pass' => 0.15,
       'day_pass' => 0.2,
+      'paypal_orders_above' => 0.27,
       'button_color' => '#f7931a',
-      'button_text_color' => '#ffffff'
+      'button_text_color' => '#ffffff',
+      'offer_paypal' => 0
     );
 
     $this->settings = get_option(__class__.'_settings', $this->default_settings);
@@ -72,14 +75,11 @@ class BitMonet
     else
     {
       // frontend integration
-      if (isset($this->settings['api_key']) && $this->settings['api_key'] &&
+      if (isset($this->settings['bitpay_apikey']) && $this->settings['bitpay_apikey'] &&
         isset($this->settings['homepage_url']) && $this->settings['homepage_url'])
       {
         // add bitmonet script file
         add_action('wp_enqueue_scripts', array($this, 'wp_enqueue_scripts'));
-
-        // add meta tag to the header
-        add_action('wp_head', array($this, 'wp_head'));
 
         // filter requests to catch bitmonet query
         add_filter('request', array($this, 'filter_request'));
@@ -135,18 +135,54 @@ class BitMonet
       wp_enqueue_media();
 
       // color picker
-      wp_enqueue_style(__class__.'_colorpicker', $this->_url.'/3rdparty/jquery-minicolors/jquery.minicolors.css', array(), self::version, 'all');
-      wp_enqueue_script(__class__.'_colorpicker', $this->_url.'/3rdparty/jquery-minicolors/jquery.minicolors.min.js', array('jquery'), self::version, false);
+      wp_enqueue_style(__class__.'_colorpicker', $this->_url.'/bitmonetform/3rdparty/jquery-minicolors/jquery.minicolors.css', array(), self::version, 'all');
+      wp_enqueue_script(__class__.'_colorpicker', $this->_url.'/bitmonetform/3rdparty/jquery-minicolors/jquery.minicolors.min.js', array('jquery'), self::version, false);
 
+      // bitmonetform
+      wp_enqueue_style(__class__.'_form', $this->_url.'/bitmonetform/bitmonetform.css', array(), self::version, 'all');
+      wp_enqueue_script(__class__.'_form', $this->_url.'/bitmonetform/bitmonetform.js', array('jquery'), self::version, false);
+
+      // settings
       wp_enqueue_style(__class__.'_styles', $this->_url.'/admin/settings.css', array(), self::version, 'all');
       wp_enqueue_script(__class__, $this->_url.'/admin/settings.js', array('jquery'), self::version, false);
+
+      // bitmonet
+      // TODO change to minified
+      wp_enqueue_script(__class__.'_bitmonet', $this->_url.'/bitmonet/bitmonet.js', array('jquery'), self::version, false);
 
       // this is a regular way how to pass variables from PHP to Javascript
       wp_localize_script(__class__, __class__, array(
         'action_url' => admin_url('admin-ajax.php?action='.__class__),
+        'settings' => get_option(__class__.'_settings', $this->default_settings),
+        'texts' => array(
+          'connect' => __('Connect', self::ld),
+          'your_homepage' => __('Your Homepage', self::ld),
+          'bitpay_apikey' => __('BitPay API Key', self::ld),
+          'paypal_email' => __('PayPal Email', self::ld),
+          'find_yours' => __('Find yours', self::ld),
+          'here' => __('here', self::ld),
+          'optional' => __('Optional', self::ld),
+          'customize' => __('Customize', self::ld),
+          'monetize' => __('Monetize', self::ld),
+          'company' => __('Company', self::ld),
+          'company_logo' => __('Company Logo', self::ld),
+          'please_select' => __('Please select', self::ld),
+          'article_pass' => __('Article pass', self::ld),
+          'hour_pass' => __('Hour pass', self::ld),
+          'day_pass' => __('Day pass', self::ld),
+          'free_content_count' => __('Free Content Count', self::ld),
+          'free_content_count_desc' => __('Number of articles user has to click before the BitMonet dialog box is shown.', self::ld),
+          'button_color' => __('Button Color', self::ld),
+          'button_text_color' => __('Button Text Color', self::ld),
+          'sign' => __('$', self::ld),
+          'offer_paypal' => __('Offer PayPal checkout for orders above', self::ld),
+          'paypal_merchant_rates' => __('See PayPal merchant rates', self::ld),
+          'enable_tweet' => __('Enable tweet to read for Article pass', self::ld)
+        ),
         'text' => array(
           'ajax_error' => __('An error occurred during the AJAX request, please try again later.', self::ld),
           'media_upload_title' => __('Please select company logo', self::ld),
+          'please_select' => __('Please select', self::ld)
         )
       ));
     }
@@ -185,38 +221,12 @@ class BitMonet
     header('Content-Type: application/json');
 
     // save settings form
-    if (isset($_POST['save_settings_h']))
+    if (isset($_POST['homepage_url']))
     {
-      // some validation
-      $errors = array();
-
-      if (!isset($_POST['homepage_url']) || !$_POST['homepage_url'])
-        $errors[] = 'homepage_url';
-
-      if (!isset($_POST['api_key']) || !$_POST['api_key'])
-        $errors[] = 'api_key';
-
-      if (!isset($_POST['company_name']) || !$_POST['company_name'])
-        $errors[] = 'company_name';
-
-      if (!isset($_POST['article_pass']) || !is_numeric($_POST['article_pass']) || $_POST['article_pass'] < 0.01)
-        $errors[] = 'article_pass';
-
-      if (!isset($_POST['hour_pass']) || !is_numeric($_POST['hour_pass']) || $_POST['hour_pass'] < 0.01)
-        $errors[] = 'hour_pass';
-
-      if (!isset($_POST['day_pass']) || !is_numeric($_POST['day_pass']) || $_POST['day_pass'] < 0.01)
-        $errors[] = 'day_pass';
-
-      if (!isset($_POST['number_clicked_need_buy']) || !is_numeric($_POST['number_clicked_need_buy']) || $_POST['number_clicked_need_buy'] < 0)
-        $errors[] = 'number_clicked_need_buy';
-
-      if (!count($errors))
-        update_option(__class__.'_settings', $_POST);
-
-      echo json_encode(array('errors' => $errors));
+      update_option(__class__.'_settings', $_POST);
     }
 
+    // save monetize option per post
     if (isset($_POST['monetize']) && isset($_POST['post_id']) && $_POST['post_id'])
     {
       update_post_meta($_POST['post_id'], '_bitmonet', $_POST['monetize']);
@@ -231,9 +241,9 @@ class BitMonet
   {
     // create invoice method
     if (isset($_GET['method']) && $_GET['method'] == 'createInvoice' && isset($_GET['price']) &&
-      isset($_GET['currency']) && isset($_GET['callback']) && isset($_GET['redirectURL']))
+      isset($_GET['currency']) && isset($_GET['callback']) && isset($_GET['redirect']))
     {
-      $r = wp_remote_post('https://'.$this->getSetting('api_key').'@bitpay.com/api/invoice', array(
+      $r = wp_remote_post('https://'.$this->getSetting('bitpay_apikey').'@bitpay.com/api/invoice', array(
         'method' => 'POST',
         'timeout' => 45,
         'redirection' => 5,
@@ -246,7 +256,7 @@ class BitMonet
           'price' => $_GET['price'],
           'currency' => $_GET['currency'],
           'transactionSpeed' => 'high',
-          'redirectURL' => $_GET['redirectURL']
+          'redirectURL' => $_GET['redirect']
         )),
         'cookies' => array(),
         'sslverify' => false
@@ -261,7 +271,7 @@ class BitMonet
     // check invoice
     if (isset($_GET['method']) && $_GET['method'] == 'checkInvoice' && isset($_GET['id']) && isset($_GET['callback']))
     {
-      $r = wp_remote_get('https://'.$this->getSetting('api_key').'@bitpay.com/api/invoice/'.$_GET['id'], array(
+      $r = wp_remote_get('https://'.$this->getSetting('bitpay_apikey').'@bitpay.com/api/invoice/'.$_GET['id'], array(
         'method' => 'GET',
         'timeout' => 45,
         'redirection' => 5,
@@ -341,7 +351,8 @@ class BitMonet
     $day_pass = $this->getSetting('day_pass');
 
     // add bitmonet main script
-    wp_enqueue_script(__class__.'_bitmonet', $this->_url.'/bitmonet/bitmonet.min.js', array('jquery'), self::version, false);
+    // TODO set minified version
+    wp_enqueue_script(__class__.'_bitmonet', $this->_url.'/bitmonet/bitmonet.js', array('jquery'), self::version, false);
 
     $site_url = trailingslashit(get_site_url());
 
@@ -349,15 +360,20 @@ class BitMonet
     wp_localize_script(__class__, __class__, array(
       'company' => $this->getSetting('company_name'),
       'logo' => $this->getSetting('company_logo'),
-      'numberClickedNeedBuy' => $this->getSetting('number_clicked_need_buy'),
+      'numberClickedNeedBuy' => $this->getSetting('free_content_count'),
       'bitpayCreatePath' => $site_url.'?method=createInvoice',
       'bitpayCheckPath' => $site_url.'?method=checkInvoice',
       'homeLink' => $this->getSetting('homepage_url'),
+      'buttonColor' => $this->getSetting('button_color'),
+      'buttonTextColor' => $this->getSetting('button_text_color'),
+      'paypalEmail' => $this->getSetting('paypal_email'),
+      'paypalOrderAbove' => $this->getSetting('paypal_orders_above'),
+      'enableTweet' => $this->getSetting('enable_tweet'),
+      'enablePaypal' => $this->getSetting('offer_paypal'),
       'optionData' => array(
         array(
           'name' => __('Article Pass', self::ld),
           'description' => __('Read just this article', self::ld),
-          'price' => $this->convertAmount($article_pass),
           'value' => $article_pass * 100,
           'note' => __('We hope you enjoy your article. Remember not to clear your cookies!', self::ld),
           'class' => 'articlePass'
@@ -365,74 +381,19 @@ class BitMonet
         array(
           'name' => __('Hour Pass', self::ld),
           'description' => __('1 hour of unlimited access', self::ld),
-          'price' => $this->convertAmount($hour_pass),
           'value' => $hour_pass * 100,
-          'note' => __("Please remember not to clear your brower's cookies during this time.", self::ld),
+          'note' => __("Please remember not to clear your browser's cookies during this time.", self::ld),
           'class' => 'hourPass'
         ),
         array(
           'name' => __('Day Pass', self::ld),
           'description' => __('All-you-can-read news, all day', self::ld),
-          'price' => $this->convertAmount($day_pass),
           'value' => $day_pass * 100,
-          'note' => __("Please remember not to clear your brower's cookies during this time.", self::ld),
+          'note' => __("Please remember not to clear your browser's cookies during this time.", self::ld),
           'class' => 'dayPass'
         )
       )
     ));
-  }
-
-  // add meta tag to the header
-  public function wp_head()
-  {
-    // custom styles for bitmonet dialog
-    $button_color = $this->getSetting('button_color');
-    $button_text_color = $this->getSetting('button_text_color');
-
-    echo '
-    <style>
-      .bitmonet-purchaseOption .bitmonet-button.orange {
-        background-color: '.$button_color.' !important;
-        color: '.$button_text_color.' !important;
-      }
-
-      .bitmonet-purchaseOption .bitmonet-button.orange:hover {
-        background-color: '.self::setColorBrightness($button_color, 40).' !important;
-        color: '.$button_text_color.' !important;
-      }
-    </style>
-    ';
-  }
-
-
-  // convert amount to readable string
-  static function convertAmount($amount)
-  {
-    if ($amount < 1)
-      return ($amount * 100).'&cent;';
-
-    return '$'.$amount;
-  }
-
-  // alter color brightness
-  static function setColorBrightness($hex, $diff)
-  {
-    $rgb = str_split(trim($hex, '# '), 2);
-
-    foreach ($rgb as &$hex)
-    {
-      $dec = hexdec($hex);
-
-      if ($diff >= 0)
-        $dec += $diff;
-      else
-        $dec -= abs($diff);
-
-      $dec = max(0, min(255, $dec));
-      $hex = str_pad(dechex($dec), 2, '0', STR_PAD_LEFT);
-    }
-
-    return '#'.implode($rgb);
   }
 
   // helper strip function

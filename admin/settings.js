@@ -1,40 +1,65 @@
 jQuery(function($)
 {
   var $spinner = $('.spinner'),
-    $button_color = $('input[name=button_color]'),
-    $button_text_color = $('input[name=button_text_color]'),
+    $preview_button = $('input[name=preview_button]'),
     $save_button = $('input[name=save_settings]'),
-    $form = $('#settings_form'),
     $save_message = $('.save_message'),
-    $company_logo = $('input[name=company_logo]'),
-    $show_preview = $('.show_preview');
+    $form = $('#bitmonetform');
 
-
-  // add color picker
-  $.minicolors.defaults.control = 'wheel';
-
-  $button_color.minicolors();
-  $button_text_color.minicolors();
-
-
-  // handle selection of company logo
-  var logo_selector = wp.media({
-    title: BitMonet.text.media_upload_title,
-    library: { type: 'image' },
-    multiple: false
-  });
-
-  logo_selector.on('select', function()
+  function getBasename(url)
   {
-    var image = logo_selector.state().get('selection').first().toJSON();
+    return url.substr(url.lastIndexOf('/') + 1);
+  }
 
-    $show_preview.attr('href', image.url).show();
-    $company_logo.val(image.url);
-  });
 
-  $('input[name=logo_picker]').on('click', function()
-  {
-    logo_selector.open();
+  // init bitmonet settings form
+  $form.BitMonetForm({
+    settings: BitMonet.settings,
+    texts: BitMonet.texts,
+    onInit: function()
+    {
+      var form = this;
+
+      // add company logo selector from wordpress
+      $('<input type="button" class="button button-secondary" name="logo_selector" value="' + BitMonet.text.please_select + '" /> <a href="" class="logo_filename" target="_blank"></a>')
+        .insertAfter(form.form.company_logo.attr('type', 'hidden'));
+
+      var logo_selector = wp.media({
+        title: BitMonet.text.media_upload_title,
+        library: { type: 'image' },
+        multiple: false
+      }),
+        $logo_filename = $('.logo_filename'),
+        url = form.form.company_logo.val();
+
+      $logo_filename.text(getBasename(url)).attr('href', url);
+
+      logo_selector.on('select', function()
+      {
+        var image = logo_selector.state().get('selection').first().toJSON();
+
+        form.form.company_logo.val(image.url);
+        $logo_filename.text(getBasename(image.url)).attr('href', image.url);
+      });
+
+      $('input[name=logo_selector]').on('click', function()
+      {
+        logo_selector.open();
+      });
+
+      // preview
+      $preview_button.on('click', function()
+      {
+        if (!form.doValidation())
+          return;
+
+        var code = '(function($) { ' + form.getCode({ preview: true }) + ' })(jQuery)';
+
+        $('<script></script>').text(code).appendTo($('body'));
+
+        return false;
+      });
+    }
   });
 
 
@@ -53,27 +78,19 @@ jQuery(function($)
   {
     e.preventDefault();
 
-    showLoader(true);
+    if (!$form.BitMonetForm('doValidation'))
+      return;
 
-    $.post(BitMonet.action_url, $form.serializeArray(), function(r)
+    showLoader(true);
+    $.post(BitMonet.action_url, $form.BitMonetForm('getSettings'), function(r)
     {
       showLoader(false);
 
-      $('input[type=text], input[type=number]').removeClass('error');
-
-      if (r.errors && r.errors.length > 0)
+      $save_message.show();
+      window.setTimeout(function()
       {
-        for(var i in r.errors)
-          $('input[name=' + r.errors[i] + ']').addClass('error');
-      }
-      else
-      {
-        $save_message.show();
-        window.setTimeout(function()
-        {
-          $save_message.fadeOut(400);
-        }, 4000);
-      }
+        $save_message.fadeOut(400);
+      }, 4000);
 
     }).error(function()
     {

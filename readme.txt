@@ -4,7 +4,7 @@ Donate link: http://bitmonet.com/
 Tags: BitMonet, Bitcoins, BitPay, BTC, Micropayments, Microtransactions, Virtual Currency, Payment, Monetization, Publishers, Content Publishers, Content Monetization, Digital Content Monetization,  Zero Transaction Fees, Free Transactions, Open-Source, Bitcoin Monetization, Off-the Blockchain Transactions, Page, Posts, Plugin, Post
 Requires at least: 3.5
 Tested up to: 3.6.1
-Stable tag: 0.2
+Stable tag: 0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,16 +12,19 @@ Open-source microtransactions platform to monetize digital content with nearly z
 
 == Description ==
 
-BitMonet is a smart microtransactions platform that enables digital content monetization with virtually zero transaction fees.
+BitMonet is an open-source microtransactions platform that enables digital content monetization with virtually zero transaction fees. 
+
+BitMonet takes less than 30 seconds to set up, and a user can pay with Bitcoin, PayPal, Credit Cards, or just by tweeting an article.
 
 = Features include =
 1. Monetize per post, or offer time-metered subscription services (per hour or per day)
-2. Zero BitMonet transaction fees
-3. No account creation required for the user
-4. Set-up in less than 15 seconds
-5. Completely configurable: Customize the branding, color of the modal, number of free pieces of content
-6. Enable or disable monetization per post
-7. Same day payouts in nearly 20 currencies
+2. Users can pay with Bitcoins, PayPal, Credit Cards, or by just Tweeting the article.
+3. Completely configurable: Customize the branding, color of the modal, number of free pieces of content
+4. Enable or disable monetization per post
+5. Same day payouts in nearly 20 currencies
+6. Zero BitMonet transaction fees
+7. No account creation required for the user
+8. Set-up in less than 30 seconds
 
 = Featured in =
  * [TechCrunch](http://techcrunch.com/2013/08/30/bitmonet-monetizes-your-blog-through-the-power-of-bitcoin/)
@@ -33,17 +36,19 @@ BitMonet is a smart microtransactions platform that enables digital content mone
 
 For more information please visit [Bitmonet.con](http://www.bitmonet.com)
 
-BitMonet open source project can be found here [here](http://github.com/bitmonet)
+BitMonet open source project can be found [here](http://github.com/bitmonet)
 
 
 == Screenshots ==
 
-1. **Settings page**
-2. **Enable BitMonet per post/page**
-3. **BitMonet payment dialog**
-4. **BitMonet confirmation dialog**
-5. **Time metered subscription tracking**
-
+1. **Choose a Pass**
+2. **Pay with Bitcoin**
+3. **Pay with Paypal**
+4. **Tweet to read**
+5. **Subscription tracking**
+6. **Settings page**
+7. **Enable BitMonet per post/page**
+8. **Responsive mobile layouts**
 
 
 == Installation ==
@@ -64,8 +69,12 @@ BitMonet open source project can be found here [here](http://github.com/bitmonet
 4. Go to 'Settings -> BitMonet' and start monetizing your valuable content
 
 
-
 == Changelog ==
+
+= 0.3 =
+ - Adding support for payment with PayPal and Credit Cards
+ - Social Payment with tweets
+ - Bug Fixes
 
 = 0.2 =
  - Bug Fixes
