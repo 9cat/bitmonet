@@ -1043,7 +1043,8 @@
         for (var articlePass in articlePasses)
         {
             var pass = articlePasses[articlePass];
-            if (href.indexOf(pass.link) != -1)
+	     	
+            if (pass.link == href)
             {
                 if (!pass.activated)
                     pass.activated = true;
@@ -1132,7 +1133,7 @@
             var articlePasses = JSON.parse(this.getCookie('bitmonet-articlePasses')) || [];
 
             var newPass = {
-                link: null,
+                link: window.location.href,
                 activated: false
             };
 
@@ -1482,4 +1483,4 @@
         }
     });
 
-})(jQuery);
+})(jQuery);`
