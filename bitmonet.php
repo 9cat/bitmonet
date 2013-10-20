@@ -3,7 +3,7 @@
 Plugin Name: BitMonet
 Plugin URI: http://wordpress.org/plugins/bitmonet/
 Description: Microtransactions platform to monetize digital content with nearly zero transaction fees!
-Version: 0.3
+Version: 0.7
 Author: bitmonet.com
 Author URI: http://bitmonet.com
 License: GPLv2 or later
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) die();
 class BitMonet
 {
   // version of the plugin should be updated with header version
-  const version = '0.3';
+  const version = '0.7';
 
   // language domain, used for translation
   const ld = 'bitmonet';
