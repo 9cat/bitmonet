@@ -3,7 +3,7 @@
 Plugin Name: BitMonet
 Plugin URI: http://wordpress.org/plugins/bitmonet/
 Description: Microtransactions platform to monetize digital content with nearly zero transaction fees!
-Version: 0.7
+Version: 0.8
 Author: bitmonet.com
 Author URI: http://bitmonet.com
 License: GPLv2 or later
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) die();
 class BitMonet
 {
   // version of the plugin should be updated with header version
-  const version = '0.7';
+  const version = '0.8';
 
   // language domain, used for translation
   const ld = 'bitmonet';
@@ -147,8 +147,7 @@ class BitMonet
       wp_enqueue_script(__class__, $this->_url.'/admin/settings.js', array('jquery'), self::version, false);
 
       // bitmonet
-      // TODO change to minified
-      wp_enqueue_script(__class__.'_bitmonet', $this->_url.'/bitmonet/bitmonet.js', array('jquery'), self::version, false);
+      wp_enqueue_script(__class__.'_bitmonet', $this->_url.'/bitmonet/bitmonet.min.js', array('jquery'), self::version, false);
 
       // this is a regular way how to pass variables from PHP to Javascript
       wp_localize_script(__class__, __class__, array(
