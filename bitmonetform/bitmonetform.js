@@ -79,42 +79,6 @@
       template = '\
       <form class="bmf-form">\
         <input type="hidden" name="bitmonetform" value="1" />\
-        <h3>' + texts.connect + '</h3>\
-        <table class="bmf-form-table">\
-          <tr>\
-            <th scope="row"><label for="bmf_homepage_url">' + texts.your_homepage + '</label></th>\
-            <td>\
-              <input type="text" class="bmf-website" name="bmf_homepage_url" id="bmf_homepage_url" value="" placeholder="www.yourwebsite.com" />\
-            </td>\
-          </tr>\
-          <tr>\
-            <th scope="row">\
-              <label for="bmf_bitpay_apikey">\
-                ' + texts.bitpay_apikey + '\
-                <span>\
-                  ' + texts.find_yours + '\
-                  <a href="https://bitpay.com/api-keys" target="_blank">' + texts.here + '</a>\
-                </span>\
-              </label>\
-            </th>\
-            <td valign="top">\
-              <input type="text" class="bmf-api-key" name="bmf_bitpay_apikey" id="bmf_bitpay_apikey" value="" />\
-            </td>\
-          </tr>\
-          <tr>\
-            <th scope="row">\
-              <label for="bmf_paypal_email">\
-                ' + texts.paypal_email + '\
-                <span>\
-                  ' + texts.optional + '\
-                </span>\
-              </label>\
-            </th>\
-            <td valign="top">\
-              <input type="text" class="bmf-api-key" name="bmf_paypal_email" id="bmf_paypal_email" value="" />\
-            </td>\
-          </tr>\
-        </table>\
         <h3>' + texts.customize + '</h3>\
         <table class="bmf-form-table">\
           <tr>\
@@ -191,6 +155,42 @@
                 <input type="checkbox" name="bmf_enable_tweet" id="bmf_enable_tweet" value="1" />\
                 ' + texts.enable_tweet + '\
               </label>\
+            </td>\
+          </tr>\
+        </table>\
+        <h3>' + texts.connect + '</h3>\
+        <table class="bmf-form-table">\
+          <tr>\
+            <th scope="row"><label for="bmf_homepage_url">' + texts.your_homepage + '</label></th>\
+            <td>\
+              <input type="text" class="bmf-website" name="bmf_homepage_url" id="bmf_homepage_url" value="" placeholder="www.yourwebsite.com" />\
+            </td>\
+          </tr>\
+          <tr>\
+            <th scope="row">\
+              <label for="bmf_bitpay_apikey">\
+                ' + texts.bitpay_apikey + '\
+                <span>\
+                  ' + texts.find_yours + '\
+                  <a href="https://bitpay.com/api-keys" target="_blank">' + texts.here + '</a>\
+                </span>\
+              </label>\
+            </th>\
+            <td valign="top">\
+              <input type="text" class="bmf-api-key" name="bmf_bitpay_apikey" id="bmf_bitpay_apikey" value="" />\
+            </td>\
+          </tr>\
+          <tr>\
+            <th scope="row">\
+              <label for="bmf_paypal_email">\
+                ' + texts.paypal_email + '\
+                <span>\
+                  ' + texts.optional + '\
+                </span>\
+              </label>\
+            </th>\
+            <td valign="top">\
+              <input type="text" class="bmf-api-key" name="bmf_paypal_email" id="bmf_paypal_email" value="" />\
             </td>\
           </tr>\
         </table>\
