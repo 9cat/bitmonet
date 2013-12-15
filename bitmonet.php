@@ -3,7 +3,7 @@
 Plugin Name: BitMonet
 Plugin URI: http://wordpress.org/plugins/bitmonet/
 Description: Microtransactions platform to monetize digital content with nearly zero transaction fees!
-Version: 0.7
+Version: 0.9
 Author: bitmonet.com
 Author URI: http://bitmonet.com
 License: GPLv2 or later
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) die();
 class BitMonet
 {
   // version of the plugin should be updated with header version
-  const version = '0.7';
+  const version = '0.9';
 
   // language domain, used for translation
   const ld = 'bitmonet';
@@ -45,7 +45,9 @@ class BitMonet
       'paypal_orders_above' => 0.27,
       'button_color' => '#f7931a',
       'button_text_color' => '#ffffff',
-      'offer_paypal' => 0
+      'offer_paypal' => 0,
+      'enable_tweet' => 0,
+      'tweet_text' => ''
     );
 
     $this->settings = get_option(__class__.'_settings', $this->default_settings);
@@ -147,8 +149,7 @@ class BitMonet
       wp_enqueue_script(__class__, $this->_url.'/admin/settings.js', array('jquery'), self::version, false);
 
       // bitmonet
-      // TODO change to minified
-      wp_enqueue_script(__class__.'_bitmonet', $this->_url.'/bitmonet/bitmonet.js', array('jquery'), self::version, false);
+      wp_enqueue_script(__class__.'_bitmonet', $this->_url.'/bitmonet/bitmonet.min.js', array('jquery'), self::version, false);
 
       // this is a regular way how to pass variables from PHP to Javascript
       wp_localize_script(__class__, __class__, array(
@@ -177,7 +178,9 @@ class BitMonet
           'sign' => __('$', self::ld),
           'offer_paypal' => __('Offer PayPal checkout for orders above', self::ld),
           'paypal_merchant_rates' => __('See PayPal merchant rates', self::ld),
-          'enable_tweet' => __('Enable tweet to read for Article pass', self::ld)
+          'enable_tweet' => __('Enable tweet to read for Article pass', self::ld),
+          'tweet_text' => __('Custom tweet text', self::ld),
+          'tweet_text_desc' => __('Leave blank if you want to use a page title.', self::ld)
         ),
         'text' => array(
           'ajax_error' => __('An error occurred during the AJAX request, please try again later.', self::ld),
@@ -369,7 +372,8 @@ class BitMonet
       'paypalEmail' => $this->getSetting('paypal_email'),
       'paypalOrderAbove' => $this->getSetting('paypal_orders_above'),
       'enableTweet' => $this->getSetting('enable_tweet'),
-      'enablePaypal' => $this->getSetting('offer_paypal'),
+      'tweetText' => $this->getSetting('tweet_text'),
+      'enablePaypal' => (int)$this->getSetting('offer_paypal'),
       'optionData' => array(
         array(
           'name' => __('Article Pass', self::ld),

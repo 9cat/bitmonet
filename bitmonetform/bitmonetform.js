@@ -25,7 +25,8 @@
       button_color: '#f7931a',
       button_text_color: '#ffffff',
       offer_paypal: 0,
-      enable_tweet: 0
+      enable_tweet: 0,
+      tweet_text: ''
     }
 
     this.options = $.extend(true, {}, {
@@ -57,7 +58,9 @@
         sign: '$',
         offer_paypal: 'Offer PayPal checkout for orders above',
         paypal_merchant_rates: 'See PayPal merchant rates',
-        enable_tweet: 'Enable tweet to read for Article pass'
+        enable_tweet: 'Enable tweet to read for Article pass',
+        tweet_text: 'Custom tweet text',
+        tweet_text_desc: 'Leave blank if you want to use a page title.'
       },
 
       // called when form is initialized
@@ -79,42 +82,6 @@
       template = '\
       <form class="bmf-form">\
         <input type="hidden" name="bitmonetform" value="1" />\
-        <h3>' + texts.connect + '</h3>\
-        <table class="bmf-form-table">\
-          <tr>\
-            <th scope="row"><label for="bmf_homepage_url">' + texts.your_homepage + '</label></th>\
-            <td>\
-              <input type="text" class="bmf-website" name="bmf_homepage_url" id="bmf_homepage_url" value="" placeholder="www.yourwebsite.com" />\
-            </td>\
-          </tr>\
-          <tr>\
-            <th scope="row">\
-              <label for="bmf_bitpay_apikey">\
-                ' + texts.bitpay_apikey + '\
-                <span>\
-                  ' + texts.find_yours + '\
-                  <a href="https://bitpay.com/api-keys" target="_blank">' + texts.here + '</a>\
-                </span>\
-              </label>\
-            </th>\
-            <td valign="top">\
-              <input type="text" class="bmf-api-key" name="bmf_bitpay_apikey" id="bmf_bitpay_apikey" value="" />\
-            </td>\
-          </tr>\
-          <tr>\
-            <th scope="row">\
-              <label for="bmf_paypal_email">\
-                ' + texts.paypal_email + '\
-                <span>\
-                  ' + texts.optional + '\
-                </span>\
-              </label>\
-            </th>\
-            <td valign="top">\
-              <input type="text" class="bmf-api-key" name="bmf_paypal_email" id="bmf_paypal_email" value="" />\
-            </td>\
-          </tr>\
-        </table>\
         <h3>' + texts.customize + '</h3>\
         <table class="bmf-form-table">\
           <tr>\
@@ -193,6 +160,48 @@
               </label>\
             </td>\
           </tr>\
+          <tr>\
+            <th scope="row"><label for="bmf_tweet_text">' + texts.tweet_text + '</label></th>\
+            <td>\
+              <input type="text" title="' + texts.tweet_text_desc + '" class="bmf-api-key" name="bmf_tweet_text" id="bmf_tweet_text" value="" />\
+            </td>\
+          </tr>\
+        </table>\
+        <h3>' + texts.connect + '</h3>\
+        <table class="bmf-form-table">\
+          <tr>\
+            <th scope="row"><label for="bmf_homepage_url">' + texts.your_homepage + '</label></th>\
+            <td>\
+              <input type="text" class="bmf-website" name="bmf_homepage_url" id="bmf_homepage_url" value="" placeholder="www.yourwebsite.com" />\
+            </td>\
+          </tr>\
+          <tr>\
+            <th scope="row">\
+              <label for="bmf_bitpay_apikey">\
+                ' + texts.bitpay_apikey + '\
+                <span>\
+                  ' + texts.find_yours + '\
+                  <a href="https://bitpay.com/api-keys" target="_blank">' + texts.here + '</a>\
+                </span>\
+              </label>\
+            </th>\
+            <td valign="top">\
+              <input type="text" class="bmf-api-key" name="bmf_bitpay_apikey" id="bmf_bitpay_apikey" value="" />\
+            </td>\
+          </tr>\
+          <tr>\
+            <th scope="row">\
+              <label for="bmf_paypal_email">\
+                ' + texts.paypal_email + '\
+                <span>\
+                  ' + texts.optional + '\
+                </span>\
+              </label>\
+            </th>\
+            <td valign="top">\
+              <input type="text" class="bmf-api-key" name="bmf_paypal_email" id="bmf_paypal_email" value="" />\
+            </td>\
+          </tr>\
         </table>\
       </form>';
 
@@ -263,6 +272,7 @@
         paypalEmail: settings.paypal_email,
         paypalOrderAbove: settings.paypal_orders_above,
         enableTweet: settings.enable_tweet,
+        tweetText: settings.tweet_text,
         enablePaypal: settings.offer_paypal,
         optionData: [
           {
