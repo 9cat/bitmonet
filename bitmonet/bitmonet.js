@@ -107,6 +107,7 @@
 
             // twitter
             enableTweet: false,
+            tweetText: '',
 
             // Modal Settings
             numberClickedNeedBuy: 15,
@@ -122,7 +123,6 @@
             // preview mode
             preview: false
         }, params);
-
 
         // create invoice URLs for bitpay
         if (this.params.bitpayAPIKey)
@@ -207,6 +207,11 @@
                             </div>\
                             <div style="clear: both;"></div>\
                         </div>\
+                        <br />\
+                        <div class="bitmonet-tweet-link" style="display: ' + (this.params.enableTweet?'block':'none') + '">\
+                            <div class="bitmonet-tweet-button"><a href="https://twitter.com/share" class="twitter-share-button" data-lang="en" data-text="' + (this.params.tweetText.length > 0?this.params.tweetText:$('title').text()) + '" data-url="' + location.href + '"></a></div>\
+                            <div class="bitmonet-tweet-text">Or tweet this article to read</div>\
+                        </div>\
                     </div>\
                 </div>\
                 <div class="bitmonet-iframe">\
@@ -246,7 +251,7 @@
                             </form>\
                         </div>\
                         <div class="bitmonet-tweet-link">\
-                            <div class="bitmonet-tweet-button"><a href="https://twitter.com/share" class="twitter-share-button" data-lang="en" data-text="' + $('title').text() + '" data-url="' + location.href + '"></a></div>\
+                            <div class="bitmonet-tweet-button"><a href="https://twitter.com/share" class="twitter-share-button" data-lang="en" data-text="' + (this.params.tweetText.length > 0?this.params.tweetText:$('title').text()) + '" data-url="' + location.href + '"></a></div>\
                             <div class="bitmonet-tweet-text">Or tweet this article to read</div>\
                             <script>\
                               window.twttr = (function (d,s,id) {\
@@ -728,9 +733,9 @@
 
         // show tweet option
         if (this.params.enableTweet && articleIndex == 0)
-            $('.bitmonet-tweet-link').show();
+            $('.bitmonet-iframe .bitmonet-tweet-link').show();
         else
-            $('.bitmonet-tweet-link').hide();
+            $('.bitmonet-iframe .bitmonet-tweet-link').hide();
     }
 
 

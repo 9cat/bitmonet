@@ -25,7 +25,8 @@
       button_color: '#f7931a',
       button_text_color: '#ffffff',
       offer_paypal: 0,
-      enable_tweet: 0
+      enable_tweet: 0,
+      tweet_text: ''
     }
 
     this.options = $.extend(true, {}, {
@@ -57,7 +58,9 @@
         sign: '$',
         offer_paypal: 'Offer PayPal checkout for orders above',
         paypal_merchant_rates: 'See PayPal merchant rates',
-        enable_tweet: 'Enable tweet to read for Article pass'
+        enable_tweet: 'Enable tweet to read for Article pass',
+        tweet_text: 'Custom tweet text',
+        tweet_text_desc: 'Leave blank if you want to use a page title.'
       },
 
       // called when form is initialized
@@ -155,6 +158,12 @@
                 <input type="checkbox" name="bmf_enable_tweet" id="bmf_enable_tweet" value="1" />\
                 ' + texts.enable_tweet + '\
               </label>\
+            </td>\
+          </tr>\
+          <tr>\
+            <th scope="row"><label for="bmf_tweet_text">' + texts.tweet_text + '</label></th>\
+            <td>\
+              <input type="text" title="' + texts.tweet_text_desc + '" class="bmf-api-key" name="bmf_tweet_text" id="bmf_tweet_text" value="" />\
             </td>\
           </tr>\
         </table>\
@@ -263,6 +272,7 @@
         paypalEmail: settings.paypal_email,
         paypalOrderAbove: settings.paypal_orders_above,
         enableTweet: settings.enable_tweet,
+        tweetText: settings.tweet_text,
         enablePaypal: settings.offer_paypal,
         optionData: [
           {

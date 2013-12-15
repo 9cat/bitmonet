@@ -137,10 +137,18 @@ body {
     max-width: none;
 }
 
+#bitmonet-dialog div.bitmonet-tweet-link {
+    width: auto;
+    margin-top: 5px;
+    text-align: center;
+    height: 20px;
+}
+
 #bitmonet-dialog .bitmonet-iframe div.bitmonet-paypal-link, #bitmonet-dialog .bitmonet-iframe div.bitmonet-tweet-link {
     width: auto;
     margin-top: 10px;
     text-align: center;
+    height: auto;
 }
 
 #bitmonet-dialog .bitmonet-iframe div.bitmonetHelpLine {

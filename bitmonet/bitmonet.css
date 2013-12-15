@@ -89,7 +89,7 @@
 
     position: fixed;
     width: 702px;
-    min-height: 471px;
+    min-height: 480px;
     height: auto;
     top: 50%;
     left: 50%;
@@ -187,7 +187,7 @@
 }
 
 #bitmonet-dialog .bitmonet-content > .bitmonet-purchaseOptions {
-    padding: 40px 40px 0 40px;
+    padding: 20px 40px 0 40px;
 }
 
 #bitmonet-dialog .bitmonet-purchaseOptions > .bitmonet-purchaseOption {
@@ -433,13 +433,23 @@
     border-bottom: 1px solid #ccd0d5;
 }
 
-#bitmonet-dialog .bitmonet-iframe div.bitmonet-paypal-link, #bitmonet-dialog .bitmonet-iframe div.bitmonet-tweet-link {
-    text-align: right;
-    margin: auto auto;
-    margin-top: 30px;
-    width: 500px;
+#bitmonet-dialog .bitmonet-iframe div.bitmonet-paypal-link, div.bitmonet-tweet-link {
     font-size: 14px;
     font-weight: bold;
+    margin: auto auto;
+    text-align: right;
+}
+
+#bitmonet-dialog .bitmonet-iframe div.bitmonet-paypal-link, #bitmonet-dialog div.bitmonet-tweet-link {
+    margin-top: 5px;
+    width: 680px;
+    height: 10px;
+}
+
+#bitmonet-dialog .bitmonet-iframe div.bitmonet-paypal-link, #bitmonet-dialog .bitmonet-iframe div.bitmonet-tweet-link {
+    margin-top: 30px;
+    width: 500px;
+    height: auto;
 }
 
 #bitmonet-dialog .bitmonet-iframe div.bitmonet-tweet-link {

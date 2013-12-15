@@ -3,8 +3,8 @@ Contributors: Ankur Nandwani, Valerie Chao, Bo Li, bitmonet, martinsuly
 Donate link: http://bitmonet.com/
 Tags: BitMonet, Bitcoins, BitPay, BTC, Micropayments, Microtransactions, Virtual Currency, Payment, Monetization, Publishers, Content Publishers, Content Monetization, Digital Content Monetization,  Zero Transaction Fees, Free Transactions, Open-Source, Bitcoin Monetization, Off-the Blockchain Transactions, Page, Posts, Plugin, Post
 Requires at least: 3.5
-Tested up to: 3.7.1
-Stable tag: 0.8
+Tested up to: 3.8
+Stable tag: 0.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -70,6 +70,10 @@ BitMonet open source project can be found [here](http://github.com/bitmonet)
 
 
 == Changelog ==
+
+= 0.9 =
+ - Added a new option to set the tweet text
+ - Misc. bug fixes
 
 = 0.8 =
  - Bug fixes
