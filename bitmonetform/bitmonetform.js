@@ -26,7 +26,8 @@
       button_text_color: '#ffffff',
       offer_paypal: 0,
       enable_tweet: 0,
-      tweet_text: ''
+      tweet_text: '',
+      show_delay: 0
     }
 
     this.options = $.extend(true, {}, {
@@ -60,7 +61,10 @@
         paypal_merchant_rates: 'See PayPal merchant rates',
         enable_tweet: 'Enable tweet to read for Article pass',
         tweet_text: 'Custom tweet text',
-        tweet_text_desc: 'Leave blank if you want to use a page title.'
+        tweet_text_desc: 'Leave blank if you want to use a page title.',
+        show_delay: 'Paywall show delay',
+        show_delay_desc: 'Delay showing the paywall by a specified amount of time. By default the paywall is shown immediately.',
+        seconds: 'second(s)'
       },
 
       // called when form is initialized
@@ -164,6 +168,12 @@
             <th scope="row"><label for="bmf_tweet_text">' + texts.tweet_text + '</label></th>\
             <td>\
               <input type="text" title="' + texts.tweet_text_desc + '" class="bmf-api-key" name="bmf_tweet_text" id="bmf_tweet_text" value="" />\
+            </td>\
+          </tr>\
+          <tr>\
+            <th scope="row"><label for="bmf_show_delay">' + texts.show_delay + '</label></th>\
+            <td>\
+              <input type="number" title="' + texts.show_delay_desc + '" class="bmf-pass" name="bmf_show_delay" id="bmf_show_delay" value="" min="0" step="1" /> ' + texts.seconds + '\
             </td>\
           </tr>\
         </table>\
@@ -274,6 +284,7 @@
         enableTweet: settings.enable_tweet,
         tweetText: settings.tweet_text,
         enablePaypal: settings.offer_paypal,
+        showDelay: settings.show_delay,
         optionData: [
           {
             value: settings.article_pass * 100
@@ -322,6 +333,10 @@
 
     if (this.checkPriceInput(this.form.paypal_orders_above.val()))
       errors.push('paypal_orders_above');
+
+    var show_delay = this.form.show_delay.val();
+    if (show_delay < 0 || isNaN(show_delay))
+      errors.push('show_delay');
 
     for(var i in errors)
       this.form[errors[i]].addClass('bmf-error');

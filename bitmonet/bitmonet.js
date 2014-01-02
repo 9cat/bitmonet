@@ -112,6 +112,7 @@
             // Modal Settings
             numberClickedNeedBuy: 15,
             articleClickRefreshRate: 7,
+            showDelay: 0,
 
             homeLink: window.location.host,
 
@@ -659,8 +660,19 @@
 
         if (freeOver && !hasPass && !this.articlesTracked[path])
         {
-            self.show();
-            self.saved.requireShowFromCheck = true;
+            if (self.params.showDelay > 0)
+            {
+                window.setTimeout(function()
+                {
+                    self.show();
+                    self.saved.requireShowFromCheck = true;
+                }, self.params.showDelay * 1000);
+            }
+            else
+            {
+                self.show();
+                self.saved.requireShowFromCheck = true;
+            }
         }
         else
             self.saved.requireShowFromCheck = false;

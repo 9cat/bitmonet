@@ -3,7 +3,7 @@
 Plugin Name: BitMonet
 Plugin URI: http://wordpress.org/plugins/bitmonet/
 Description: Microtransactions platform to monetize digital content with nearly zero transaction fees!
-Version: 0.9
+Version: 1.0
 Author: bitmonet.com
 Author URI: http://bitmonet.com
 License: GPLv2 or later
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) die();
 class BitMonet
 {
   // version of the plugin should be updated with header version
-  const version = '0.9';
+  const version = '1.0';
 
   // language domain, used for translation
   const ld = 'bitmonet';
@@ -47,7 +47,8 @@ class BitMonet
       'button_text_color' => '#ffffff',
       'offer_paypal' => 0,
       'enable_tweet' => 0,
-      'tweet_text' => ''
+      'tweet_text' => '',
+      'show_delay' => 0
     );
 
     $this->settings = get_option(__class__.'_settings', $this->default_settings);
@@ -180,7 +181,10 @@ class BitMonet
           'paypal_merchant_rates' => __('See PayPal merchant rates', self::ld),
           'enable_tweet' => __('Enable tweet to read for Article pass', self::ld),
           'tweet_text' => __('Custom tweet text', self::ld),
-          'tweet_text_desc' => __('Leave blank if you want to use a page title.', self::ld)
+          'tweet_text_desc' => __('Leave blank if you want to use a page title.', self::ld),
+          'show_delay' => __('Paywall show delay', self::ld),
+          'show_delay_desc' => __('Delay showing the paywall by a specified amount of time. By default the paywall is shown immediately.', self::ld),
+          'seconds' => __('second(s)', self::ld)
         ),
         'text' => array(
           'ajax_error' => __('An error occurred during the AJAX request, please try again later.', self::ld),
@@ -225,9 +229,7 @@ class BitMonet
 
     // save settings form
     if (isset($_POST['homepage_url']))
-    {
       update_option(__class__.'_settings', $_POST);
-    }
 
     // save monetize option per post
     if (isset($_POST['monetize']) && isset($_POST['post_id']) && $_POST['post_id'])
@@ -374,6 +376,7 @@ class BitMonet
       'enableTweet' => $this->getSetting('enable_tweet'),
       'tweetText' => $this->getSetting('tweet_text'),
       'enablePaypal' => (int)$this->getSetting('offer_paypal'),
+      'showDelay' => (int)$this->getSetting('show_delay'),
       'optionData' => array(
         array(
           'name' => __('Article Pass', self::ld),
