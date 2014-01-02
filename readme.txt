@@ -3,8 +3,8 @@ Contributors: Ankur Nandwani, Valerie Chao, Bo Li, bitmonet, martinsuly
 Donate link: http://bitmonet.com/
 Tags: BitMonet, Bitcoins, BitPay, BTC, Micropayments, Microtransactions, Virtual Currency, Payment, Monetization, Publishers, Content Publishers, Content Monetization, Digital Content Monetization,  Zero Transaction Fees, Free Transactions, Open-Source, Bitcoin Monetization, Off-the Blockchain Transactions, Page, Posts, Plugin, Post
 Requires at least: 3.5
-Tested up to: 3.6.1
-Stable tag: 0.7
+Tested up to: 3.8
+Stable tag: 1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,7 @@ Open-source microtransactions platform to monetize digital content with nearly z
 
 == Description ==
 
-BitMonet is an open-source microtransactions platform that enables digital content monetization with virtually zero transaction fees. 
+BitMonet is an open-source microtransactions platform that enables digital content monetization with virtually zero transaction fees.
 
 BitMonet takes less than 30 seconds to set up, and a user can pay with Bitcoin, PayPal, Credit Cards, or just by tweeting an article.
 
@@ -70,7 +70,18 @@ BitMonet open source project can be found [here](http://github.com/bitmonet)
 
 
 == Changelog ==
-= 0.7 = 
+
+= 1.0 =
+ - Added a new option to delay showing the paywall
+
+= 0.9 =
+ - Added a new option to set the tweet text
+ - Misc. bug fixes
+
+= 0.8 =
+ - Bug fixes
+
+= 0.7 =
  - Fixing the issue with Version number -
 
 = 0.6 =

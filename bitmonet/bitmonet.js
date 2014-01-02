@@ -1,6 +1,6 @@
 (function($)
 {
-    window.mobileCheck = function()
+    window.mobileCheck = (function()
     {
         var check = false;
 
@@ -11,7 +11,7 @@
         })(navigator.userAgent||navigator.vendor||window.opera);
 
         return check;
-    }
+    })();
 
     // get current URL from where is this script loaded - it's used to append CSS files correctly
     var scripts = document.getElementsByTagName('script'),
@@ -25,14 +25,14 @@
 
     for(var i in css)
     {
-        if (i == 1 && !mobileCheck())
+        if (i == 1 && !mobileCheck)
             continue;
 
         var link = document.createElement('link');
         link.setAttribute('href', css[i]);
         link.setAttribute('rel', 'stylesheet');
         link.setAttribute('type', 'text/css');
-            //link.setAttribute('media', '(max-width: 420px)');
+        //link.setAttribute('media', '(max-width: 420px)');
         head.appendChild(link);
     }
 
@@ -107,17 +107,23 @@
 
             // twitter
             enableTweet: false,
+            tweetText: '',
 
             // Modal Settings
             numberClickedNeedBuy: 15,
             articleClickRefreshRate: 7,
+            showDelay: 0,
 
             homeLink: window.location.host,
+
+            // if it should show bitmonet only if tag is present - "<script type="bitmonet"></script>"
+            triggerOnTag: false,
+            checkForTumblr: false, // if it should check if we are on tumblr post page
+            checkForBlogger: false, // check for blogger post page
 
             // preview mode
             preview: false
         }, params);
-
 
         // create invoice URLs for bitpay
         if (this.params.bitpayAPIKey)
@@ -125,7 +131,12 @@
 
 
         // variables saved to cookies
-        var saved = JSON.parse(this.getCookie('bitmonet-saved'));
+        var saved = false;
+        try
+        {
+            saved = JSON.parse(this.getCookie('bitmonet-saved'));
+        } catch(e) { }
+
         if (!saved) saved = {};
 
         this.saved = $.extend({}, {
@@ -158,7 +169,7 @@
                     <div class="bitmonet-content">\
                         <div class="bitmonet-header">\
                             <h4>' + this.params.company + '</h4>\
-                            ' + (this.params.logo?'<img height="20" src="' + this.params.logo + '" />':'<div class="bitmonet-logo"></div>') + '\
+                            ' + (this.params.logo?'<div class="bitmonet-img-logo"><img src="' + this.params.logo + '" /></div>':'<div class="bitmonet-logo"></div>') + '\
                             <p class="bitmonet-heading">' + this.params.heading + '</p>\
                             <p class="bitmonet-subtitle buyPass">\
                                 ' + this.params.subtitle + '\
@@ -196,6 +207,11 @@
                                     </a>\
                             </div>\
                             <div style="clear: both;"></div>\
+                        </div>\
+                        <br />\
+                        <div class="bitmonet-tweet-link" style="display: ' + (this.params.enableTweet?'block':'none') + '">\
+                            <div class="bitmonet-tweet-button"><a href="https://twitter.com/share" class="twitter-share-button" data-lang="en" data-text="' + (this.params.tweetText.length > 0?this.params.tweetText:$('title').text()) + '" data-url="' + location.href + '"></a></div>\
+                            <div class="bitmonet-tweet-text">Or tweet this article to read</div>\
                         </div>\
                     </div>\
                 </div>\
@@ -236,7 +252,7 @@
                             </form>\
                         </div>\
                         <div class="bitmonet-tweet-link">\
-                            <div class="bitmonet-tweet-button"><a href="https://twitter.com/share" class="twitter-share-button" data-lang="en" data-text="' + $('title').text() + '" data-url="' + location.href + '"></a></div>\
+                            <div class="bitmonet-tweet-button"><a href="https://twitter.com/share" class="twitter-share-button" data-lang="en" data-text="' + (this.params.tweetText.length > 0?this.params.tweetText:$('title').text()) + '" data-url="' + location.href + '"></a></div>\
                             <div class="bitmonet-tweet-text">Or tweet this article to read</div>\
                             <script>\
                               window.twttr = (function (d,s,id) {\
@@ -317,7 +333,15 @@
 
 
         // get currently tracked articles
-        this.articlesTracked = JSON.parse(this.getCookie('bitmonet-articlesTracked'));
+        try
+        {
+            this.articlesTracked = JSON.parse(this.getCookie('bitmonet-articlesTracked'));
+        }
+        catch(e)
+        {
+            this.articlesTracked = false;
+        }
+
         if (!this.articlesTracked) this.articlesTracked = {};
 
         this.initialize();
@@ -359,6 +383,24 @@
 
     BitMonet.prototype.initialize = function()
     {
+        // check if it should show the dialog
+        if (this.params.triggerOnTag)
+        {
+            // don't show if there is not our tag
+            if ($('script[type=bitmonet]').length == 0)
+                return;
+
+            var url = location.href;
+
+            // don't show when we are not on post page of tumblr or blogger
+            if (this.params.checkForTumblr && !/\/post\/\d+\/.+/.test(url))
+                return;
+
+            if (this.params.checkForBlogger && !/\/\d+\/\d+\/.+/.test(url))
+                return;
+        }
+
+
         var self = this, $body = $('body');
 
         $body.append(this.bitmonetDomHTML);
@@ -394,7 +436,8 @@
                 $('body').css({
                     'width': 'inherit',
                     'height': 'inherit',
-                    'position': 'inherit'
+                    'position': 'inherit',
+                    'overflow': 'visible'
                 });
 
                 $('#bitmonet-grayOut').fadeOut();
@@ -445,7 +488,7 @@
         $(window).resize(function()
         {
             self.check_body_padding_set_overlay();
-            self.set_bmd_position();
+            //self.set_bmd_position();
         });
 
         // When timer hovered, move it up
@@ -617,8 +660,19 @@
 
         if (freeOver && !hasPass && !this.articlesTracked[path])
         {
-            self.show();
-            self.saved.requireShowFromCheck = true;
+            if (self.params.showDelay > 0)
+            {
+                window.setTimeout(function()
+                {
+                    self.show();
+                    self.saved.requireShowFromCheck = true;
+                }, self.params.showDelay * 1000);
+            }
+            else
+            {
+                self.show();
+                self.saved.requireShowFromCheck = true;
+            }
         }
         else
             self.saved.requireShowFromCheck = false;
@@ -691,9 +745,9 @@
 
         // show tweet option
         if (this.params.enableTweet && articleIndex == 0)
-            $('.bitmonet-tweet-link').show();
+            $('.bitmonet-iframe .bitmonet-tweet-link').show();
         else
-            $('.bitmonet-tweet-link').hide();
+            $('.bitmonet-iframe .bitmonet-tweet-link').hide();
     }
 
 
@@ -701,29 +755,20 @@
     BitMonet.prototype.show = function()
     {
         this.check_body_padding_set_overlay();
-        this.set_bmd_position();
+        //this.set_bmd_position();
+
         $('#bitmonet-grayOut').fadeIn();
         $('#bitmonet-dialog').fadeIn();
 
         // When modal is active, no need to scroll
-        // H.O.W.D.Y. Media - Added conditional CSS changes for mobile version
         if (!this.params.preview)
         {
-         if (mobileCheck()) {
             $('body').css({
                 'width': '100%',
                 'height': '100%',
+                'position': 'fixed',
+                'overflow': 'hidden'
             });
-            $('#page').css({
-                'display': 'none'
-            });
-         } else {
-            $('body').css({
-                'width': '100%',
-                'height': '100%',
-                'position': 'fixed'
-            });
-         }
         }
     }
 
@@ -769,11 +814,6 @@
     {
         if (this.saved.showThanks)
         {
-            if (mobileCheck()) {
-                $('#page').css({
-                    'display': 'inline'
-                });       
-            } 
             this.reverseThankYouDom();
             this.saved.showThanks = false;
             this.saveVars();
@@ -815,7 +855,7 @@
 
                 // if it's a mobile device
                 //if ($(window).width() < 420)
-                if (mobileCheck())
+                if (mobileCheck)
                     $('.bitmonet-bitpay-link').attr('href', result.url);
                 else
                 {
@@ -851,15 +891,15 @@
             windowHeight = $(window).height(),
             windowMobile = windowWidth <= 420;
 
-        if (mobileCheck())
+        if (mobileCheck)
         {
             $('#bitmonet-dialog').css('top', '0px');
             $('#bitmonet-dialog').css('left', '0px');
             return;
         }
 
-        var bmHeight = 478;
-        var bmWidth = 700;
+        var bmHeight = 471;
+        var bmWidth = 702;
 
         if ($('#bitmonet-dialog').is(":visible"))
         {
@@ -878,9 +918,7 @@
 
     BitMonet.prototype.check_body_padding_set_overlay = function()
     {
-        var windowMobile = $(window).width() <= 420;
-
-        if (mobileCheck())
+        if (mobileCheck)
             return;
 
         var top = this.get_number_from_px($('body').css('margin-top'));
@@ -900,13 +938,31 @@
         return parseInt(string.substring(0, index));
     };
 
+    BitMonet.prototype.encrypt = function(str)
+    {
+        var b = '';
+        for(var i = 0; i < str.length; i++)
+            b += String.fromCharCode(69 ^ str.charCodeAt(i));
+
+        return b;
+    }
+
+    BitMonet.prototype.decrypt = function(str)
+    {
+        var b = '';
+        for(var i = 0; i < str.length; i++)
+            b += String.fromCharCode(69 ^ str.charCodeAt(i));
+
+        return b;
+    }
+
     // ----- Cookies ----- //
     BitMonet.prototype.setCookie = function(name, value, days)
     {
         var exp_date = new Date();
         exp_date.setDate(exp_date.getDate() + days);
 
-        value = escape(value) + (days == null?'':'; expires=' + exp_date.toUTCString()) + '; path=/';
+        value = escape(this.encrypt(value)) + (days == null?'':'; expires=' + exp_date.toUTCString()) + '; path=/';
         document.cookie = name + "=" + value
     }
 
@@ -922,7 +978,7 @@
             y = cook.substr(cook.indexOf('=') + 1);
             x = x.replace(/^\s+|\s+$/g, '');
             if(x == name)
-                return unescape(y);
+                return this.decrypt(unescape(y));
         }
 
         return false;
@@ -934,7 +990,15 @@
         var href = window.location.href;
 
         // Check if day pass
-        var dayPasses = JSON.parse(this.getCookie('bitmonet-dayPasses'));
+        var dayPasses = false;
+
+        try
+        {
+            dayPasses = JSON.parse(this.getCookie('bitmonet-dayPasses'));
+        } catch(e) { }
+
+        if (!dayPasses) dayPasses = [];
+
         var foundActiveDayPass = false;
         var firstDayPassLocation = -1;
         var deletedPasses = [];
@@ -985,7 +1049,15 @@
 
         // -- If no day pass, check for hour pass -- //
 
-        var hourPasses = JSON.parse(this.getCookie('bitmonet-hourPasses'));
+        var hourPasses = false;
+
+        try
+        {
+            hourPasses = JSON.parse(this.getCookie('bitmonet-hourPasses'));
+        } catch(e) { }
+
+        if (!hourPasses) hourPasses = [];
+
         var foundActiveHourPass = false;
         var firstHourPassLocation = -1;
         deletedPasses = [];
@@ -1036,14 +1108,22 @@
 
 
         // -- Check for article passes -- //
-        var articlePasses = JSON.parse(this.getCookie('bitmonet-articlePasses'));
+        var articlePasses = false;
+
+        try
+        {
+            articlePasses = JSON.parse(this.getCookie('bitmonet-articlePasses'));
+        } catch(e) { }
+
+        if (!articlePasses) articlePasses = [];
+
         var foundActiveArticlePass = false;
         var firstArticlePassLocation = -1;
 
         for (var articlePass in articlePasses)
         {
             var pass = articlePasses[articlePass];
-	     	
+
             if (pass.link == href)
             {
                 if (!pass.activated)
@@ -1130,7 +1210,14 @@
             // -- Article Pass -- //
 
             // Create and Add new pass
-            var articlePasses = JSON.parse(this.getCookie('bitmonet-articlePasses')) || [];
+            var articlePasses = false;
+
+            try
+            {
+                articlePasses = JSON.parse(this.getCookie('bitmonet-articlePasses'));
+            } catch(e) { }
+
+            if (!articlePasses) articlePasses = [];
 
             var newPass = {
                 link: window.location.href,
@@ -1157,7 +1244,14 @@
             // -- Hour Pass -- //
 
             // Create and Add new pass
-            var hourPasses = JSON.parse(this.getCookie('bitmonet-hourPasses')) || [];
+            var hourPasses = false;
+
+            try
+            {
+                hourPasses = JSON.parse(this.getCookie('bitmonet-hourPasses'));
+            } catch(e) { }
+
+            if (!hourPasses) hourPasses = [];
 
             var newPass = {
                 start: new Date(),
@@ -1184,7 +1278,14 @@
             // -- Day Pass -- //
 
             // Create and Add new pass
-            var dayPasses = JSON.parse(this.getCookie('bitmonet-dayPasses')) || [];
+            var dayPasses = false;
+
+            try
+            {
+                dayPasses = JSON.parse(this.getCookie('bitmonet-dayPasses'));
+            } catch(e) { }
+
+            if (!dayPasses) dayPasses = [];
 
             var newPass = {
                 start: new Date(),
@@ -1243,7 +1344,7 @@
         if (!$('#bitmonet-timer').hasClass('timer-visible'))
         {
             $('#bitmonet-timer').addClass('timer-visible');
-            $('#bitmonet-timer').stop().animate({
+            $('#bitmonet-timer').show().stop().animate({
                 'bottom': '-5px'
             });
         }
@@ -1262,6 +1363,9 @@
                 $('#bitmonet-timer').removeClass('timer-visible');
                 $('#bitmonet-timer').stop().animate({
                     'bottom': '-62px'
+                }, function()
+                {
+                    $(this).hide();
                 });
             }
 
